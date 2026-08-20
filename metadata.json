@@ -1,0 +1,6 @@
+{
+  "name": "Jiu-Jitsu Hub - Arte Suave",
+  "description": "Enciclopédia completa de Brazilian Jiu-Jitsu com golpes e técnicas passo a passo, história, curiosidades, notícias de campeonatos, escolas lendárias, regras IBJJF e Mestre IA.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
