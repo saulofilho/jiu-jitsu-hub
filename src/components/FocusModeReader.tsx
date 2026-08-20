@@ -17,9 +17,11 @@ import {
   ZoomIn,
   ZoomOut,
   Layers,
-  ArrowRight
+  ArrowRight,
+  Box
 } from 'lucide-react';
 import { Technique, BeltLevel } from '../types';
+import { Technique3DViewer } from './Technique3DViewer';
 
 interface FocusModeReaderProps {
   technique: Technique;
@@ -53,7 +55,7 @@ export function FocusModeReader({
   onToggleTrained,
 }: FocusModeReaderProps) {
   const [activeStepIndex, setActiveStepIndex] = useState<number>(0);
-  const [viewFormat, setViewFormat] = useState<'stepper' | 'full'>('stepper');
+  const [viewFormat, setViewFormat] = useState<'stepper' | 'full' | '3d'>('stepper');
   const [fontSizeLevel, setFontSizeLevel] = useState<'normal' | 'large' | 'xlarge'>('large');
 
   // Drill Timer (ex: 3 min rounds for repetitive drills)
@@ -206,7 +208,7 @@ export function FocusModeReader({
 
         {/* Right: Actions & Exit */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-          {/* Format Toggle: Passo a Passo ou Lista Completa */}
+          {/* Format Toggle: Passo a Passo, Lista Completa ou 3D */}
           <div className="hidden sm:flex items-center bg-zinc-900 border border-zinc-800 rounded-lg p-0.5 text-xs font-medium">
             <button
               onClick={() => setViewFormat('stepper')}
@@ -227,6 +229,17 @@ export function FocusModeReader({
               }`}
             >
               Visão Completa
+            </button>
+            <button
+              onClick={() => setViewFormat('3d')}
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-md transition-all ${
+                viewFormat === '3d'
+                  ? 'bg-purple-600 text-white font-bold shadow-sm'
+                  : 'text-purple-400 hover:text-purple-300'
+              }`}
+            >
+              <Box className="w-3.5 h-3.5" />
+              <span>3D Tatame</span>
             </button>
           </div>
 
@@ -296,7 +309,18 @@ export function FocusModeReader({
 
       {/* MAIN READING CANVAS */}
       <main className="relative z-10 flex-1 overflow-y-auto px-4 sm:px-8 py-6 max-w-5xl w-full mx-auto flex flex-col justify-between">
-        {viewFormat === 'stepper' ? (
+        {viewFormat === '3d' ? (
+          /* 3D TATAMI SIMULATOR VIEW */
+          <div className="space-y-4 my-auto">
+            <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
+              <div>
+                <h2 className="text-xl sm:text-2xl font-black text-white">{technique.name}</h2>
+                <p className="text-xs sm:text-sm text-zinc-400">Simulação Tridimensional e Biomecânica de Alavanca</p>
+              </div>
+            </div>
+            <Technique3DViewer technique={technique} />
+          </div>
+        ) : viewFormat === 'stepper' ? (
           /* SINGLE STEP / STEPPER CAROUSEL (TATAMI DRILL OPTIMIZED) */
           <div className="flex-1 flex flex-col justify-center space-y-6 sm:space-y-8 my-auto">
             {/* Context Position Banner */}

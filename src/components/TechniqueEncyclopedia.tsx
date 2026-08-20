@@ -16,12 +16,16 @@ import {
   Flame,
   Maximize2,
   Zap,
-  Scale
+  Scale,
+  Box,
+  Activity,
+  BookOpen
 } from 'lucide-react';
 import { Technique, TechniqueCategory, Modality, BeltLevel } from '../types';
 import { TECHNIQUES } from '../data/techniques';
 import { FocusModeReader } from './FocusModeReader';
 import { TrainingStatsModal } from './TrainingStatsModal';
+import { Technique3DViewer } from './Technique3DViewer';
 import { calculateTechniqueXP, getUserXPProgress } from '../utils/xpSystem';
 import { PieChart as PieChartIcon } from 'lucide-react';
 
@@ -79,6 +83,7 @@ export const TechniqueEncyclopedia: React.FC<TechniqueEncyclopediaProps> = ({
   const [selectedModality, setSelectedModality] = useState<Modality | 'todas'>('todas');
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('todas');
   const [activeTechnique, setActiveTechnique] = useState<Technique | null>(null);
+  const [modalTab, setModalTab] = useState<'passos' | '3d' | 'invisivel' | 'erros'>('passos');
   const [focusModeTechnique, setFocusModeTechnique] = useState<Technique | null>(null);
   const [filterFavoritesOnly, setFilterFavoritesOnly] = useState(false);
   const [isStatsModalOpen, setIsStatsModalOpen] = useState(false);
@@ -381,6 +386,20 @@ export const TechniqueEncyclopedia: React.FC<TechniqueEncyclopediaProps> = ({
                   </button>
 
                   <div className="flex items-center gap-1.5">
+                    <button
+                      id={`btn-3d-${tech.id}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setActiveTechnique(tech);
+                        setModalTab('3d');
+                      }}
+                      title="Visualizar Mecânica em 3D / 360°"
+                      className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 border border-purple-500/30 text-xs font-bold transition-all"
+                    >
+                      <Box className="w-3.5 h-3.5" />
+                      <span>3D</span>
+                    </button>
+
                     {onCompareTechnique && (
                       <button
                         id={`btn-compare-${tech.id}`}
@@ -409,7 +428,10 @@ export const TechniqueEncyclopedia: React.FC<TechniqueEncyclopediaProps> = ({
 
                     <button
                       id={`btn-view-${tech.id}`}
-                      onClick={() => setActiveTechnique(tech)}
+                      onClick={() => {
+                        setActiveTechnique(tech);
+                        setModalTab('passos');
+                      }}
                       className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500 text-amber-400 hover:text-zinc-950 text-xs font-bold border border-amber-500/30 hover:border-amber-500 transition-all"
                     >
                       <span>Passo a Passo</span>
@@ -514,102 +536,210 @@ export const TechniqueEncyclopedia: React.FC<TechniqueEncyclopediaProps> = ({
               </div>
             </div>
 
-            {/* Positions Info banner */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-zinc-900/60 rounded-xl p-4 border border-zinc-800">
-              <div>
-                <span className="text-[11px] font-bold uppercase text-zinc-400 tracking-wider">Posição Inicial de Ataque:</span>
-                <p className="text-sm font-semibold text-white mt-0.5">{activeTechnique.startingPosition}</p>
-              </div>
-              <div>
-                <span className="text-[11px] font-bold uppercase text-zinc-400 tracking-wider">Objetivo / Posição Final:</span>
-                <p className="text-sm font-semibold text-amber-400 mt-0.5">{activeTechnique.targetPositionOrSub}</p>
-              </div>
+            {/* Modal Navigation Tabs */}
+            <div className="flex items-center gap-2 border-b border-zinc-800 pb-1 overflow-x-auto no-scrollbar">
+              <button
+                id="modal-tab-passos"
+                onClick={() => setModalTab('passos')}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all ${
+                  modalTab === 'passos'
+                    ? 'bg-amber-500 text-zinc-950 shadow-md shadow-amber-500/20 scale-[1.02]'
+                    : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+                }`}
+              >
+                <BookOpen className="w-4 h-4" />
+                <span>Passo a Passo</span>
+              </button>
+
+              <button
+                id="modal-tab-3d"
+                onClick={() => setModalTab('3d')}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all ${
+                  modalTab === '3d'
+                    ? 'bg-amber-500 text-zinc-950 shadow-md shadow-amber-500/20 scale-[1.02]'
+                    : 'text-zinc-400 hover:text-white hover:bg-zinc-900 border border-purple-500/30'
+                }`}
+              >
+                <Box className="w-4 h-4 text-purple-400" />
+                <span>Visualização 3D</span>
+                <span className="px-1.5 py-0.2 rounded bg-purple-500 text-[10px] text-white font-black">
+                  360°
+                </span>
+              </button>
+
+              <button
+                id="modal-tab-invisivel"
+                onClick={() => setModalTab('invisivel')}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all ${
+                  modalTab === 'invisivel'
+                    ? 'bg-amber-500 text-zinc-950 shadow-md shadow-amber-500/20 scale-[1.02]'
+                    : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+                }`}
+              >
+                <Sparkles className="w-4 h-4" />
+                <span>Jiu-Jitsu Invisível</span>
+              </button>
+
+              <button
+                id="modal-tab-erros"
+                onClick={() => setModalTab('erros')}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all ${
+                  modalTab === 'erros'
+                    ? 'bg-amber-500 text-zinc-950 shadow-md shadow-amber-500/20 scale-[1.02]'
+                    : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+                }`}
+              >
+                <ShieldAlert className="w-4 h-4" />
+                <span>Erros & Defesas</span>
+              </button>
             </div>
 
-            {/* Step by Step numbered list */}
-            <div className="space-y-3">
-              <h4 className="text-base font-extrabold text-white flex items-center gap-2">
-                <span className="w-6 h-6 rounded-full bg-amber-500 text-zinc-950 flex items-center justify-center text-xs font-black">1</span>
-                Passo a Passo de Execução Técnica
-              </h4>
-              <div className="space-y-2.5">
-                {activeTechnique.steps.map((step, idx) => (
-                  <div key={idx} className="flex items-start gap-3 bg-zinc-900/40 rounded-xl p-3.5 border border-zinc-800/80">
-                    <span className="w-6 h-6 rounded-lg bg-zinc-800 text-amber-400 text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
-                      {idx + 1}
-                    </span>
-                    <p className="text-xs sm:text-sm text-zinc-200 leading-relaxed">
-                      {step}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Invisible Jiu-Jitsu Highlight (Gold Box) */}
-            {activeTechnique.invisibleDetails.length > 0 && (
-              <div className="bg-gradient-to-br from-amber-950/40 via-zinc-900 to-amber-950/20 border border-amber-500/40 rounded-2xl p-5 space-y-2.5 shadow-lg">
-                <h4 className="text-sm font-black text-amber-400 flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-amber-400" />
-                  Detalhes do "Jiu-Jitsu Invisível" (Alavancas & Biomecânica)
-                </h4>
-                <ul className="space-y-2">
-                  {activeTechnique.invisibleDetails.map((detail, idx) => (
-                    <li key={idx} className="text-xs sm:text-sm text-amber-100/90 flex items-start gap-2">
-                      <span className="text-amber-400 font-bold shrink-0">•</span>
-                      <span>{detail}</span>
-                    </li>
-                  ))}
-                </ul>
+            {/* Modal Body Based on Active Tab */}
+            {modalTab === '3d' && (
+              <div className="space-y-4 animate-fade-in">
+                <Technique3DViewer
+                  technique={activeTechnique}
+                  onOpenFullscreen={() => {
+                    setFocusModeTechnique(activeTechnique);
+                    setActiveTechnique(null);
+                  }}
+                />
               </div>
             )}
 
-            {/* Mistakes, Counters & Follow-ups 3-column layout */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* Common Mistakes */}
-              <div className="bg-red-950/20 border border-red-900/40 rounded-2xl p-4 space-y-2">
-                <h5 className="text-xs font-extrabold text-red-400 flex items-center gap-1.5 uppercase tracking-wider">
-                  <AlertTriangle className="w-3.5 h-3.5" /> Erros Mais Comuns
-                </h5>
-                <ul className="space-y-1.5 text-xs text-red-200/80">
-                  {activeTechnique.commonMistakes.map((m, idx) => (
-                    <li key={idx} className="flex items-start gap-1.5">
-                      <span className="text-red-400 shrink-0">✕</span>
-                      <span>{m}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Counters & Defenses */}
-              <div className="bg-blue-950/20 border border-blue-900/40 rounded-2xl p-4 space-y-2">
-                <h5 className="text-xs font-extrabold text-blue-400 flex items-center gap-1.5 uppercase tracking-wider">
-                  <ShieldAlert className="w-3.5 h-3.5" /> Defesas & Contragolpes
-                </h5>
-                <ul className="space-y-1.5 text-xs text-blue-200/80">
-                  {activeTechnique.counters.map((c, idx) => (
-                    <li key={idx} className="flex items-start gap-1.5">
-                      <span className="text-blue-400 shrink-0">✓</span>
-                      <span>{c}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            {/* Follow-up Combos */}
-            {activeTechnique.followUps.length > 0 && (
-              <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4">
-                <span className="text-[11px] font-extrabold text-zinc-400 uppercase tracking-wider block mb-2">
-                  Encadeamentos & Combos em Cadeia:
-                </span>
-                <div className="flex flex-wrap gap-2">
-                  {activeTechnique.followUps.map((fu, idx) => (
-                    <span key={idx} className="text-xs px-3 py-1 rounded-lg bg-zinc-800 text-zinc-200 font-medium border border-zinc-700">
-                      ⚡ {fu}
-                    </span>
-                  ))}
+            {modalTab === 'passos' && (
+              <div className="space-y-6 animate-fade-in">
+                {/* Positions Info banner */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-zinc-900/60 rounded-xl p-4 border border-zinc-800">
+                  <div>
+                    <span className="text-[11px] font-bold uppercase text-zinc-400 tracking-wider">Posição Inicial de Ataque:</span>
+                    <p className="text-sm font-semibold text-white mt-0.5">{activeTechnique.startingPosition}</p>
+                  </div>
+                  <div>
+                    <span className="text-[11px] font-bold uppercase text-zinc-400 tracking-wider">Objetivo / Posição Final:</span>
+                    <p className="text-sm font-semibold text-amber-400 mt-0.5">{activeTechnique.targetPositionOrSub}</p>
+                  </div>
                 </div>
+
+                {/* Step by Step numbered list */}
+                <div className="space-y-3">
+                  <h4 className="text-base font-extrabold text-white flex items-center gap-2">
+                    <span className="w-6 h-6 rounded-full bg-amber-500 text-zinc-950 flex items-center justify-center text-xs font-black">1</span>
+                    Passo a Passo de Execução Técnica
+                  </h4>
+                  <div className="space-y-2.5">
+                    {activeTechnique.steps.map((step, idx) => (
+                      <div key={idx} className="flex items-start gap-3 bg-zinc-900/40 rounded-xl p-3.5 border border-zinc-800/80">
+                        <span className="w-6 h-6 rounded-lg bg-zinc-800 text-amber-400 text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
+                          {idx + 1}
+                        </span>
+                        <p className="text-xs sm:text-sm text-zinc-200 leading-relaxed">
+                          {step}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Quick 3D Banner Callout */}
+                <div 
+                  onClick={() => setModalTab('3d')}
+                  className="cursor-pointer bg-gradient-to-r from-purple-950/40 via-zinc-900 to-amber-950/30 border border-purple-500/40 rounded-2xl p-4 flex items-center justify-between gap-4 hover:border-purple-400 transition-all"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center shrink-0 border border-purple-500/30">
+                      <Box className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h5 className="text-sm font-black text-white flex items-center gap-2">
+                        <span>Ver Mecânica e Alavanca em 3D</span>
+                        <span className="px-2 py-0.5 rounded-full bg-amber-500 text-zinc-950 text-[10px] font-black uppercase">Interativo</span>
+                      </h5>
+                      <p className="text-xs text-zinc-400 mt-0.5">
+                        Gire o tatame em 360°, alterne para visão em 1ª pessoa e inspecione os vetores de força.
+                      </p>
+                    </div>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-purple-400 shrink-0" />
+                </div>
+              </div>
+            )}
+
+            {modalTab === 'invisivel' && (
+              <div className="space-y-4 animate-fade-in">
+                {activeTechnique.invisibleDetails.length > 0 ? (
+                  <div className="bg-gradient-to-br from-amber-950/40 via-zinc-900 to-amber-950/20 border border-amber-500/40 rounded-2xl p-5 space-y-3 shadow-lg">
+                    <h4 className="text-sm font-black text-amber-400 flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-amber-400" />
+                      Detalhes do "Jiu-Jitsu Invisível" (Alavancas & Biomecânica Oculta)
+                    </h4>
+                    <ul className="space-y-3">
+                      {activeTechnique.invisibleDetails.map((detail, idx) => (
+                        <li key={idx} className="text-xs sm:text-sm text-amber-100/90 flex items-start gap-2.5 bg-zinc-900/60 p-3 rounded-xl border border-amber-500/20">
+                          <span className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-400 font-bold flex items-center justify-center shrink-0 text-xs mt-0.5">★</span>
+                          <span className="leading-relaxed">{detail}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : (
+                  <div className="text-center py-8 text-zinc-400 text-xs">
+                    Nenhum detalhe invisível cadastrado para esta técnica.
+                  </div>
+                )}
+              </div>
+            )}
+
+            {modalTab === 'erros' && (
+              <div className="space-y-6 animate-fade-in">
+                {/* Mistakes and Counters 2-column layout */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Common Mistakes */}
+                  <div className="bg-red-950/20 border border-red-900/40 rounded-2xl p-4 space-y-2.5">
+                    <h5 className="text-xs font-extrabold text-red-400 flex items-center gap-1.5 uppercase tracking-wider">
+                      <AlertTriangle className="w-3.5 h-3.5" /> Erros Mais Comuns
+                    </h5>
+                    <ul className="space-y-2 text-xs text-red-200/80">
+                      {activeTechnique.commonMistakes.map((m, idx) => (
+                        <li key={idx} className="flex items-start gap-2 bg-red-950/40 p-2.5 rounded-lg border border-red-900/30">
+                          <span className="text-red-400 font-bold shrink-0">✕</span>
+                          <span>{m}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Counters & Defenses */}
+                  <div className="bg-blue-950/20 border border-blue-900/40 rounded-2xl p-4 space-y-2.5">
+                    <h5 className="text-xs font-extrabold text-blue-400 flex items-center gap-1.5 uppercase tracking-wider">
+                      <ShieldAlert className="w-3.5 h-3.5" /> Defesas & Contragolpes
+                    </h5>
+                    <ul className="space-y-2 text-xs text-blue-200/80">
+                      {activeTechnique.counters.map((c, idx) => (
+                        <li key={idx} className="flex items-start gap-2 bg-blue-950/40 p-2.5 rounded-lg border border-blue-900/30">
+                          <span className="text-blue-400 font-bold shrink-0">✓</span>
+                          <span>{c}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                {/* Follow-up Combos */}
+                {activeTechnique.followUps.length > 0 && (
+                  <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4">
+                    <span className="text-[11px] font-extrabold text-zinc-400 uppercase tracking-wider block mb-2">
+                      Encadeamentos & Combos em Cadeia:
+                    </span>
+                    <div className="flex flex-wrap gap-2">
+                      {activeTechnique.followUps.map((fu, idx) => (
+                        <span key={idx} className="text-xs px-3 py-1 rounded-lg bg-zinc-800 text-zinc-200 font-medium border border-zinc-700">
+                          ⚡ {fu}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 

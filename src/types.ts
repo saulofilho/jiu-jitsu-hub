@@ -47,6 +47,68 @@ export interface AchievementBadge {
   perk?: string;
 }
 
+export interface Technique3DCameraAngle {
+  id: string;
+  label: string;
+  description: string;
+  icon?: string;
+  position: [number, number, number];
+  target: [number, number, number];
+}
+
+export interface Technique3DVector {
+  id: string;
+  label: string;
+  type: 'leverage' | 'pressure' | 'rotation' | 'trapping' | 'posture';
+  origin: [number, number, number];
+  direction: [number, number, number];
+  color: string;
+  description: string;
+}
+
+export interface Technique3DJointFocalPoint {
+  name: string;
+  anatomyZone: string;
+  targetAngle: string;
+  pressureKgEstimate: string;
+  dangerLevel: 'moderado' | 'alto' | 'critico';
+  position: [number, number, number];
+  description: string;
+}
+
+export interface Technique3DData {
+  preset:
+    | 'armlock'
+    | 'triangulo'
+    | 'mata_leao'
+    | 'kimura'
+    | 'americana'
+    | 'guilhotina'
+    | 'omoplata'
+    | 'knee_cut'
+    | 'single_leg'
+    | 'double_leg'
+    | 'berimbolo'
+    | 'arco_e_flecha'
+    | 'de_la_riva'
+    | 'saida_montada_upa'
+    | 'passagem_toureando'
+    | 'chave_pe_reta'
+    | 'heel_hook'
+    | 'generic';
+  gifAnimationUrl?: string;
+  diagram3dUrl?: string;
+  fulcrumName: string;
+  leverageType: 'Alavanca Interfixa (Classe 1)' | 'Alavanca Inter-resistente (Classe 2)' | 'Alavanca Interpotente (Classe 3)' | 'Estrangulamento Vascular Bilateral' | 'Estrangulamento Respiratório / Traqueal' | 'Cisalhamento Articular' | 'Alavanca Rotacional / Torque Espiral';
+  primaryPressureZone: string;
+  biomechanicalSummary: string;
+  tacticalAdvantage: string;
+  cameraAngles: Technique3DCameraAngle[];
+  focalPoints: Technique3DJointFocalPoint[];
+  vectorForces: Technique3DVector[];
+  phaseNames: string[];
+}
+
 export interface Technique {
   id: string;
   name: string;
@@ -67,6 +129,7 @@ export interface Technique {
   followUps: string[];
   ibjjfLegalityNote?: string;
   tags: string[];
+  visual3d?: Technique3DData;
 }
 
 export interface School {
