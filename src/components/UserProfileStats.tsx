@@ -28,7 +28,13 @@ import {
   Star,
   Camera,
   Edit3,
-  User
+  User,
+  Bell,
+  BellRing,
+  Clock,
+  Play,
+  Github,
+  Globe
 } from 'lucide-react';
 import { Technique, BeltLevel, TechniqueCategory } from '../types';
 import { TECHNIQUES } from '../data/techniques';
@@ -37,6 +43,17 @@ import { BeltRankProgressBar } from './BeltRankProgressBar';
 import { BadgeShowcase } from './BadgeShowcase';
 import { loadStreakData, incrementStreakCounter } from '../utils/streakTracker';
 import { ProfilePhotoModal } from './ProfilePhotoModal';
+import {
+  ReminderConfig,
+  loadReminderConfig,
+  saveReminderConfig,
+  PRESET_TIMES,
+  THEME_MESSAGES,
+  getNotificationPermission,
+  requestNotificationPermission,
+  triggerPushNotification,
+  playMartialChime
+} from '../utils/notificationSystem';
 
 interface UserProfileStatsProps {
   userBelt: BeltLevel;
@@ -47,6 +64,8 @@ interface UserProfileStatsProps {
   toggleFavorite: (id: string) => void;
   onNavigateToTechnique?: (technique: Technique) => void;
   onNavigateTab?: (tab: string) => void;
+  onOpenReminderModal?: () => void;
+  onOpenDeployGuideModal?: () => void;
 }
 
 const BELT_CONFIG: Record<BeltLevel, { label: string; bg: string; text: string; border: string; desc: string }> = {
@@ -129,11 +148,16 @@ export function UserProfileStats({
   favorites,
   toggleFavorite,
   onNavigateToTechnique,
-  onNavigateTab
+  onNavigateTab,
+  onOpenReminderModal,
+  onOpenDeployGuideModal
 }: UserProfileStatsProps) {
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<string>('todas');
   const [chartViewMode, setChartViewMode] = useState<'geral' | 'categorias' | 'faixas'>('geral');
   const [streakTrackerState, setStreakTrackerState] = useState(() => loadStreakData());
+  const [reminderConfig, setReminderConfig] = useState<ReminderConfig>(() => loadReminderConfig());
+  const [notifPermission, setNotifPermission] = useState<NotificationPermission | 'unsupported'>(() => getNotificationPermission());
+  const [testPushSent, setTestPushSent] = useState(false);
 
   // Profile photo and custom name saved in localStorage
   const [userPhoto, setUserPhoto] = useState<string | null>(() => {
@@ -151,6 +175,51 @@ export function UserProfileStats({
     }
   });
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
+
+  const handleToggleReminderQuick = async () => {
+    if (!reminderConfig.enabled && notifPermission !== 'granted') {
+      const res = await requestNotificationPermission();
+      setNotifPermission(res);
+      if (res === 'granted') {
+        const updated = { ...reminderConfig, enabled: true };
+        setReminderConfig(updated);
+        saveReminderConfig(updated);
+      }
+    } else {
+      const updated = { ...reminderConfig, enabled: !reminderConfig.enabled };
+      setReminderConfig(updated);
+      saveReminderConfig(updated);
+    }
+  };
+
+  const handleQuickTimeSelect = (timeStr: string) => {
+    const updated = { ...reminderConfig, time: timeStr, enabled: true };
+    setReminderConfig(updated);
+    saveReminderConfig(updated);
+  };
+
+  const handleTestPushInProfile = async () => {
+    if (notifPermission !== 'granted') {
+      const res = await requestNotificationPermission();
+      setNotifPermission(res);
+      if (res !== 'granted') return;
+    }
+
+    const payload = reminderConfig.theme === 'custom' && reminderConfig.customMessage.trim()
+      ? { title: '🥋 Teste do Lembrete Diário!', body: reminderConfig.customMessage.trim() }
+      : THEME_MESSAGES[reminderConfig.theme](streakTrackerState.currentStreak || 1);
+
+    const ok = triggerPushNotification(
+      `[LEMBRETE] ${payload.title}`,
+      { body: payload.body },
+      reminderConfig.soundEnabled
+    );
+
+    if (ok) {
+      setTestPushSent(true);
+      setTimeout(() => setTestPushSent(false), 3500);
+    }
+  };
 
   const handleSaveProfilePhoto = (newPhoto: string | null, newName: string) => {
     setUserPhoto(newPhoto);

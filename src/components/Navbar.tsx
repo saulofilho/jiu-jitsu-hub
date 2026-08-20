@@ -14,7 +14,10 @@ import {
   PieChart as PieChartIcon,
   Zap,
   FileText,
-  Scale
+  Scale,
+  Bell,
+  BellRing,
+  Github
 } from 'lucide-react';
 import { BeltLevel } from '../types';
 import { TECHNIQUES } from '../data/techniques';
@@ -32,6 +35,10 @@ interface NavbarProps {
   trainedMoves?: string[];
   totalCount?: number;
   openStatsModal?: () => void;
+  openReminderModal?: () => void;
+  openDeployGuideModal?: () => void;
+  isReminderEnabled?: boolean;
+  reminderTime?: string;
 }
 
 const BELT_CONFIG: Record<BeltLevel, { label: string; bg: string; text: string; border: string }> = {
@@ -54,7 +61,11 @@ export const Navbar: React.FC<NavbarProps> = ({
   trainedCount = 0,
   trainedMoves = [],
   totalCount = 20,
-  openStatsModal
+  openStatsModal,
+  openReminderModal,
+  openDeployGuideModal,
+  isReminderEnabled = false,
+  reminderTime = '18:30'
 }) => {
   const currentBelt = BELT_CONFIG[userBelt];
   const trainedPercentage = totalCount > 0 ? Math.round((trainedCount / totalCount) * 100) : 0;
@@ -114,6 +125,49 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             <BeltRankProgressBar progress={xpProgress} variant="minimal" />
           </div>
+
+          {/* Daily Reminder Bell Button */}
+          {openReminderModal && (
+            <button
+              id="btn-nav-daily-reminder"
+              onClick={openReminderModal}
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-bold transition-all shadow-sm ${
+                isReminderEnabled
+                  ? 'bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border-amber-500/40'
+                  : 'bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200 border-zinc-800'
+              }`}
+              title={
+                isReminderEnabled
+                  ? `Lembrete Push Ativo para as ${reminderTime}. Clique para alterar.`
+                  : 'Configurar Lembrete Diário de Treino (Push Notification)'
+              }
+            >
+              {isReminderEnabled ? (
+                <div className="relative">
+                  <BellRing className="w-3.5 h-3.5 text-amber-400" />
+                  <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+                </div>
+              ) : (
+                <Bell className="w-3.5 h-3.5 text-zinc-400" />
+              )}
+              <span className="hidden xl:inline text-[11px] font-mono">
+                {isReminderEnabled ? reminderTime : 'Lembrete'}
+              </span>
+            </button>
+          )}
+
+          {/* GitHub Pages Deploy Guide trigger */}
+          {openDeployGuideModal && (
+            <button
+              id="btn-nav-github-deploy"
+              onClick={openDeployGuideModal}
+              className="hidden lg:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-700/80 text-zinc-300 hover:text-white text-xs font-bold transition-all shadow-sm"
+              title="Guia de Deploy no GitHub Pages (Node 20)"
+            >
+              <Github className="w-3.5 h-3.5 text-zinc-300" />
+              <span className="text-[11px]">GitHub Pages</span>
+            </button>
+          )}
 
           {/* Quick Donut Stats Modal trigger */}
           {openStatsModal && (
