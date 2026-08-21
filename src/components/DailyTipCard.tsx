@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { DAILY_TIPS, DailyTip } from '../data/dailyTips';
-import { Sparkles, RefreshCw, ChevronRight, Lightbulb, BookOpen, ScrollText, Scale, X, Flame } from 'lucide-react';
+import { Sparkles, RefreshCw, ChevronRight, Lightbulb, BookOpen, ScrollText, Scale, X, Flame, Swords } from 'lucide-react';
 
 interface DailyTipCardProps {
   onNavigate?: (tab: string) => void;
@@ -20,32 +20,32 @@ export function DailyTipCard({ onNavigate }: DailyTipCardProps) {
   const getCategoryIcon = (cat: DailyTip['category']) => {
     switch (cat) {
       case 'invisivel':
-        return <Sparkles className="w-4 h-4 text-amber-400" />;
+        return <Sparkles className="w-3.5 h-3.5 text-amber-400" />;
       case 'regras':
-        return <Scale className="w-4 h-4 text-sky-400" />;
+        return <Scale className="w-3.5 h-3.5 text-sky-400" />;
       case 'filosofia':
-        return <ScrollText className="w-4 h-4 text-emerald-400" />;
+        return <ScrollText className="w-3.5 h-3.5 text-emerald-400" />;
       case 'historia':
-        return <BookOpen className="w-4 h-4 text-purple-400" />;
+        return <BookOpen className="w-3.5 h-3.5 text-purple-400" />;
       case 'tecnica':
       default:
-        return <Flame className="w-4 h-4 text-orange-400" />;
+        return <Flame className="w-3.5 h-3.5 text-red-400" />;
     }
   };
 
   const getBadgeColors = (cat: DailyTip['category']) => {
     switch (cat) {
       case 'invisivel':
-        return 'bg-amber-950/70 border-amber-800/80 text-amber-300';
+        return 'bg-amber-950/80 border-amber-600/60 text-amber-300';
       case 'regras':
-        return 'bg-sky-950/70 border-sky-800/80 text-sky-300';
+        return 'bg-sky-950/80 border-sky-600/60 text-sky-300';
       case 'filosofia':
-        return 'bg-emerald-950/70 border-emerald-800/80 text-emerald-300';
+        return 'bg-emerald-950/80 border-emerald-600/60 text-emerald-300';
       case 'historia':
-        return 'bg-purple-950/70 border-purple-800/80 text-purple-300';
+        return 'bg-purple-950/80 border-purple-600/60 text-purple-300';
       case 'tecnica':
       default:
-        return 'bg-orange-950/70 border-orange-800/80 text-orange-300';
+        return 'bg-red-950/80 border-red-600/60 text-red-300';
     }
   };
 
@@ -73,10 +73,11 @@ export function DailyTipCard({ onNavigate }: DailyTipCardProps) {
             setIsDismissed(false);
             sessionStorage.removeItem('bjj_daily_tip_dismissed');
           }}
-          className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-amber-400 hover:text-amber-300 bg-amber-950/40 hover:bg-amber-900/50 border border-amber-800/40 rounded-full transition-all"
+          className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-amber-400 hover:text-amber-300 bg-zinc-900/90 hover:bg-zinc-800 border border-amber-500/30 rounded-lg transition-all shadow-md"
         >
-          <Lightbulb className="w-3.5 h-3.5" />
-          <span>Ver Dica do Dia</span>
+          <span className="font-kanji text-xs text-red-400">心得</span>
+          <Lightbulb className="w-3.5 h-3.5 text-amber-400" />
+          <span>Ver Dica do Mestre</span>
         </button>
       </div>
     );
@@ -85,25 +86,31 @@ export function DailyTipCard({ onNavigate }: DailyTipCardProps) {
   return (
     <div
       id="daily-tip-banner"
-      className="relative mb-8 overflow-hidden rounded-2xl bg-gradient-to-r from-zinc-900 via-zinc-900/95 to-zinc-900/90 border border-amber-500/30 p-5 sm:p-6 shadow-xl shadow-amber-950/10 backdrop-blur-sm group"
+      className="relative mb-8 overflow-hidden rounded-2xl bg-gradient-to-r from-[#121217] via-[#101015] to-[#0d0d12] border border-red-900/40 p-5 sm:p-6 shadow-2xl shadow-black/80 backdrop-blur-xl group katana-sheen"
     >
-      {/* Decorative background glow */}
-      <div className="absolute top-0 right-0 -mt-8 -mr-8 w-44 h-44 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-1/4 -mb-10 w-32 h-32 bg-amber-600/5 rounded-full blur-2xl pointer-events-none" />
+      {/* Decorative martial backdrop accents */}
+      <div className="absolute top-0 right-0 -mt-10 -mr-10 w-48 h-48 bg-red-600/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 left-1/3 -mb-10 w-40 h-40 bg-amber-500/5 rounded-full blur-2xl pointer-events-none" />
+      
+      {/* Subtle Japanese Watermark in background */}
+      <div className="absolute -right-4 -bottom-6 font-kanji text-8xl font-black text-white/[0.02] select-none pointer-events-none">
+        秘伝
+      </div>
 
-      <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex items-start gap-3.5 flex-1">
-          <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 shrink-0 mt-0.5 shadow-inner">
-            <Lightbulb className="w-5 h-5" />
+      <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-5">
+        <div className="flex items-start gap-4 flex-1">
+          <div className="p-3 rounded-xl bg-gradient-to-br from-red-600/20 to-amber-500/10 border border-red-500/30 text-amber-400 shrink-0 mt-0.5 shadow-lg shadow-red-950/40">
+            <Swords className="w-5 h-5 text-red-400" />
           </div>
 
           <div className="space-y-1.5">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1">
-                <Sparkles className="w-3 h-3" /> Dica do Dia & Segredo Técnico
+              <span className="text-[11px] font-warrior font-bold uppercase tracking-widest text-red-400 flex items-center gap-1.5">
+                <span className="font-kanji text-xs text-red-500">心得</span>
+                <span>Sabedoria do Tatame & Bushido</span>
               </span>
               <span
-                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold border ${getBadgeColors(
+                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold border ${getBadgeColors(
                   currentTip.category
                 )}`}
               >
@@ -112,16 +119,16 @@ export function DailyTipCard({ onNavigate }: DailyTipCardProps) {
               </span>
             </div>
 
-            <h3 className="text-base sm:text-lg font-bold text-zinc-100 tracking-tight flex items-center gap-2">
+            <h3 className="text-base sm:text-lg font-warrior font-bold text-white tracking-wide flex items-center gap-2">
               {currentTip.title}
             </h3>
 
-            <p className="text-sm text-zinc-300 leading-relaxed max-w-4xl">
+            <p className="text-sm text-zinc-300 leading-relaxed max-w-4xl font-normal">
               {currentTip.content}
             </p>
 
             <div className="pt-1 flex items-center gap-2 text-xs text-zinc-400 italic">
-              <span>— {currentTip.authorOrSource}</span>
+              <span className="text-amber-400/80 font-serif">— {currentTip.authorOrSource}</span>
             </div>
           </div>
         </div>
@@ -132,20 +139,20 @@ export function DailyTipCard({ onNavigate }: DailyTipCardProps) {
             <button
               id="btn-next-random-tip"
               onClick={getRandomTip}
-              title="Sortear outra dica"
-              className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-zinc-800/90 hover:bg-zinc-700 text-zinc-300 hover:text-white text-xs font-medium border border-zinc-700/60 transition-all active:scale-95"
+              title="Sortear outro ensinamento"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white text-xs font-semibold border border-zinc-800 transition-all hover:border-zinc-700 active:scale-95"
             >
-              <RefreshCw className={`w-3.5 h-3.5 ${isRotating ? 'animate-spin' : ''}`} />
-              <span className="hidden sm:inline">Outra Dica</span>
+              <RefreshCw className={`w-3.5 h-3.5 ${isRotating ? 'animate-spin text-red-400' : 'text-zinc-400'}`} />
+              <span className="hidden sm:inline">Outro Ensinamento</span>
             </button>
 
             {currentTip.targetTab && onNavigate && (
               <button
                 id="btn-tip-action"
                 onClick={() => onNavigate(currentTip.targetTab!)}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-zinc-950 text-xs font-bold shadow-md shadow-amber-500/20 transition-all hover:scale-105 active:scale-95"
+                className="flex items-center gap-1 px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-zinc-950 text-xs font-bold shadow-lg shadow-red-900/30 transition-all hover:scale-105 active:scale-95"
               >
-                <span>{currentTip.actionText || 'Explorar'}</span>
+                <span>{currentTip.actionText || 'Ver no Dojo'}</span>
                 <ChevronRight className="w-3.5 h-3.5" />
               </button>
             )}
@@ -154,7 +161,7 @@ export function DailyTipCard({ onNavigate }: DailyTipCardProps) {
           <button
             id="btn-dismiss-daily-tip"
             onClick={handleDismiss}
-            title="Ocultar por enquanto"
+            title="Ocultar ensinamento"
             className="p-1.5 text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800 rounded-lg transition-colors ml-1"
           >
             <X className="w-4 h-4" />

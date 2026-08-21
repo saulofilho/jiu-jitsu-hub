@@ -15,6 +15,7 @@ import { TrainingStatsModal } from './components/TrainingStatsModal';
 import { BadgeUnlockToast } from './components/BadgeUnlockToast';
 import { TrainingDiary } from './components/TrainingDiary';
 import { TechniqueComparator } from './components/TechniqueComparator';
+import { AmbientSoundPlayer } from './components/AmbientSoundPlayer';
 import { Shield, Award, Heart, Sparkles, BookOpen, Flame, Target } from 'lucide-react';
 import { TECHNIQUES } from './data/techniques';
 import { getUserXPProgress, AchievementBadge } from './utils/xpSystem';
@@ -119,7 +120,12 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col selection:bg-amber-500 selection:text-zinc-950">
+    <div className="min-h-screen bg-[#08080a] text-zinc-100 flex flex-col selection:bg-red-600 selection:text-white relative overflow-x-hidden">
+      {/* Subtle Martial Atmosphere Background Elements */}
+      <div className="fixed inset-0 bg-tatami-pattern opacity-40 pointer-events-none z-0" />
+      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[400px] bg-red-600/5 rounded-full blur-[140px] pointer-events-none z-0" />
+      <div className="fixed bottom-0 right-0 w-[600px] h-[400px] bg-amber-600/5 rounded-full blur-[120px] pointer-events-none z-0" />
+
       {/* Top Navigation */}
       <Navbar
         activeTab={activeTab}
@@ -135,7 +141,7 @@ export default function App() {
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <main className="relative z-10 flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {/* Daily Tip component displayed on home / main view */}
         <DailyTipCard onNavigate={(tab) => setActiveTab(tab)} />
 
@@ -223,47 +229,60 @@ export default function App() {
         onClose={() => setNewlyUnlockedBadge(null)}
       />
 
-      {/* Footer */}
-      <footer className="bg-zinc-950 border-t border-zinc-900 text-zinc-400 py-10 mt-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
-          <div className="space-y-1">
-            <div className="flex items-center justify-center md:justify-start gap-2">
-              <Shield className="w-5 h-5 text-amber-400" />
-              <span className="text-sm font-extrabold text-white tracking-wider">
-                JIU-JITSU HUB • ARTE SUAVE
-              </span>
+      {/* Warrior / Dojo Footer */}
+      <footer className="relative z-10 bg-[#070709] border-t border-red-950/60 text-zinc-400 py-12 mt-16 shadow-2xl">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+          {/* Ambient Dojo Soundscape Player */}
+          <AmbientSoundPlayer />
+
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+            <div className="space-y-2">
+              <div className="flex items-center justify-center md:justify-start gap-2.5">
+                <Shield className="w-5 h-5 text-red-500" />
+                <span className="font-warrior font-black text-white tracking-widest text-base">
+                  JIU-JITSU HUB • ARTE SUAVE
+                </span>
+                <span className="inkan-stamp text-[10px]">武道</span>
+              </div>
+              <p className="text-xs text-zinc-400 max-w-md">
+                Enciclopédia Marcial: Biomecânica Invisível, Linhagens Históricas, Regras Oficiais IBJJF e Inteligência Artificial para Lutadores.
+              </p>
             </div>
-            <p className="text-xs text-zinc-500">
-              Enciclopédia Completa de Golpes, História, Linhagens, Regras IBJJF & Inteligência Artificial.
-            </p>
+
+            <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-semibold text-zinc-300">
+              <button onClick={() => setActiveTab('golpes')} className="hover:text-red-400 transition-colors">
+                Golpes (技)
+              </button>
+              <button onClick={() => setActiveTab('perfil')} className="text-amber-400 hover:text-amber-300 font-bold transition-colors">
+                Meu Dojo (道場)
+              </button>
+              <button onClick={() => setActiveTab('escolas')} className="hover:text-red-400 transition-colors">
+                Linhagens (流派)
+              </button>
+              <button onClick={() => setActiveTab('historia')} className="hover:text-red-400 transition-colors">
+                Bushido (武士道)
+              </button>
+              <button onClick={() => setActiveTab('regras')} className="hover:text-red-400 transition-colors">
+                Placar IBJJF
+              </button>
+              <button onClick={() => setActiveTab('noticias')} className="hover:text-red-400 transition-colors">
+                Torneios
+              </button>
+              <button onClick={() => setActiveTab('mestre-ai')} className="text-red-400 hover:text-red-300 transition-colors flex items-center gap-1 font-bold">
+                <Sparkles className="w-3 h-3 text-amber-400" /> Mestre IA
+              </button>
+            </div>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-semibold text-zinc-400">
-            <button onClick={() => setActiveTab('golpes')} className="hover:text-amber-400 transition-colors">
-              Golpes
-            </button>
-            <button onClick={() => setActiveTab('perfil')} className="text-emerald-400 hover:text-emerald-300 font-bold transition-colors">
-              Meu Perfil & Gráficos
-            </button>
-            <button onClick={() => setActiveTab('escolas')} className="hover:text-amber-400 transition-colors">
-              Escolas
-            </button>
-            <button onClick={() => setActiveTab('historia')} className="hover:text-amber-400 transition-colors">
-              História
-            </button>
-            <button onClick={() => setActiveTab('regras')} className="hover:text-amber-400 transition-colors">
-              Placar IBJJF
-            </button>
-            <button onClick={() => setActiveTab('noticias')} className="hover:text-amber-400 transition-colors">
-              Notícias
-            </button>
-            <button onClick={() => setActiveTab('mestre-ai')} className="text-amber-400 hover:text-amber-300 transition-colors">
-              Mestre IA
-            </button>
-          </div>
-
-          <div className="text-xs text-zinc-600 font-mono">
-            OSS • 押忍 • Jiu-Jitsu Para Todos
+          <div className="pt-6 border-t border-zinc-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
+            <div className="flex items-center gap-2 font-mono">
+              <span className="text-red-500 font-bold">OSS • 押忍</span>
+              <span>—</span>
+              <span className="text-zinc-400 font-serif">心技体 (Shin-Gi-Tai: Mente, Técnica e Corpo)</span>
+            </div>
+            <div className="text-zinc-500">
+              Jiu-Jitsu Para Todos • Respeito, Disciplina e Honra
+            </div>
           </div>
         </div>
       </footer>
