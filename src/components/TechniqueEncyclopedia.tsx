@@ -19,7 +19,8 @@ import {
   Scale,
   Box,
   Activity,
-  BookOpen
+  BookOpen,
+  GitFork
 } from 'lucide-react';
 import { Technique, TechniqueCategory, Modality, BeltLevel } from '../types';
 import { TECHNIQUES } from '../data/techniques';
@@ -37,6 +38,7 @@ interface TechniqueEncyclopediaProps {
   userBelt: BeltLevel;
   onNavigateToProfile?: () => void;
   onCompareTechnique?: (techId: string) => void;
+  onNavigateToPaths?: () => void;
 }
 
 const CATEGORY_TABS: { id: TechniqueCategory | 'todas'; label: string; icon: string; kanji: string }[] = [
@@ -76,7 +78,8 @@ export const TechniqueEncyclopedia: React.FC<TechniqueEncyclopediaProps> = ({
   toggleTrained,
   userBelt,
   onNavigateToProfile,
-  onCompareTechnique
+  onCompareTechnique,
+  onNavigateToPaths
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<TechniqueCategory | 'todas'>('todas');
   const [searchQuery, setSearchQuery] = useState('');
@@ -263,6 +266,19 @@ export const TechniqueEncyclopedia: React.FC<TechniqueEncyclopediaProps> = ({
             <PieChartIcon className="w-3.5 h-3.5 text-red-400" />
             <span>Técnicas Dominadas ({Math.round((trainedMoves.length / (TECHNIQUES.length || 1)) * 100)}%)</span>
           </button>
+
+          {/* Quick Link to Technique Path Map */}
+          {onNavigateToPaths && (
+            <button
+              id="btn-toolbar-flow-paths"
+              onClick={onNavigateToPaths}
+              className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-gradient-to-r from-red-600/20 to-amber-600/20 hover:from-red-600/30 hover:to-amber-600/30 border border-red-500/40 text-amber-300 text-xs font-bold transition-all"
+              title="Abrir Mapa de Conexões e Caminho Técnico (D3)"
+            >
+              <GitFork className="w-3.5 h-3.5 text-red-400" />
+              <span>Mapa de Fluxo D3</span>
+            </button>
+          )}
         </div>
       </div>
 

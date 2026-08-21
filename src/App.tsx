@@ -15,6 +15,7 @@ import { TrainingStatsModal } from './components/TrainingStatsModal';
 import { BadgeUnlockToast } from './components/BadgeUnlockToast';
 import { TrainingDiary } from './components/TrainingDiary';
 import { TechniqueComparator } from './components/TechniqueComparator';
+import { TechniquePathView } from './components/TechniquePathView';
 import { AmbientSoundPlayer } from './components/AmbientSoundPlayer';
 import { Shield, Award, Heart, Sparkles, BookOpen, Flame, Target } from 'lucide-react';
 import { TECHNIQUES } from './data/techniques';
@@ -153,6 +154,24 @@ export default function App() {
             toggleTrained={toggleTrained}
             userBelt={userBelt}
             onNavigateToProfile={() => setActiveTab('perfil')}
+            onNavigateToPaths={() => setActiveTab('caminhos')}
+            onCompareTechnique={(techId) => {
+              setCompareTechA(techId);
+              setActiveTab('comparador');
+            }}
+          />
+        )}
+
+        {activeTab === 'caminhos' && (
+          <TechniquePathView
+            favorites={favorites}
+            toggleFavorite={toggleFavorite}
+            trainedMoves={trainedMoves}
+            toggleTrained={toggleTrained}
+            userBelt={userBelt}
+            onNavigateToTechnique={(techId) => {
+              setActiveTab('golpes');
+            }}
             onCompareTechnique={(techId) => {
               setCompareTechA(techId);
               setActiveTab('comparador');

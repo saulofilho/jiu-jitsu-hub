@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Search, X, BookOpen, Users, ScrollText, Timer, ArrowRight, Scale } from 'lucide-react';
+import { Search, X, BookOpen, Users, ScrollText, Timer, ArrowRight, Scale, GitFork } from 'lucide-react';
 import { TECHNIQUES } from '../data/techniques';
 import { SCHOOLS } from '../data/schools';
 import { HISTORY_TOPICS, GLOSSARY_TERMS } from '../data/history';
@@ -97,6 +97,15 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onNav
       icon: Timer
     }));
 
+    const flowMatches = (q.includes('caminho') || q.includes('flow') || q.includes('arvore') || q.includes('arvore') || q.includes('fluxo') || q.includes('conex') || q.includes('decis') || q.includes('fechada') || q.includes('de la riva')) ? [{
+      id: 'caminho-flow-global',
+      title: 'Caminho Técnico & Cadeias de Golpes (Flow D3)',
+      subtitle: 'Visualize conexões lógicas de ataques, reações e transições a partir da Guarda Fechada, De La Riva e Quedas',
+      tab: 'caminhos',
+      type: 'Mapa Interativo D3',
+      icon: GitFork
+    }] : [];
+
     const comparatorMatches = (q.includes('compar') || q.includes('vs') || q.includes('versus') || q.includes('duelo') || q.includes('diferen')) ? [{
       id: 'comparador-global',
       title: 'Comparador de Técnicas Lado a Lado',
@@ -106,7 +115,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onNav
       icon: Scale
     }] : [];
 
-    return [...comparatorMatches, ...techMatches, ...schoolMatches, ...historyMatches, ...glossaryMatches, ...rulesMatches].slice(0, 10);
+    return [...flowMatches, ...comparatorMatches, ...techMatches, ...schoolMatches, ...historyMatches, ...glossaryMatches, ...rulesMatches].slice(0, 10);
   }, [query]);
 
   if (!isOpen) return null;

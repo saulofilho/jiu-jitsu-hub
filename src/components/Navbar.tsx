@@ -18,7 +18,8 @@ import {
   Bell,
   BellRing,
   Github,
-  Swords
+  Swords,
+  GitFork
 } from 'lucide-react';
 import { BeltLevel } from '../types';
 import { TECHNIQUES } from '../data/techniques';
@@ -74,6 +75,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const navItems = [
     { id: 'golpes', label: 'Golpes & Técnicas', kanji: '技', icon: BookOpen, badge: '20+' },
+    { id: 'caminhos', label: 'Caminho Técnico (Flow)', kanji: '路', icon: GitFork, badge: 'D3' },
     { id: 'comparador', label: 'Comparar Golpes', kanji: '対', icon: Scale, badge: 'Vs' },
     { id: 'diario', label: 'Diário do Guerreiro', kanji: '記', icon: FileText, badge: 'Notas' },
     { id: 'perfil', label: 'Meu Perfil & Treinos', kanji: '道', icon: Target, badge: `Nível ${xpProgress.currentTier.level}` },
