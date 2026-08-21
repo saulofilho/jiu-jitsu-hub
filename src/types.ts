@@ -109,6 +109,29 @@ export interface Technique3DData {
   phaseNames: string[];
 }
 
+export interface TechniqueVideoChapter {
+  timeSeconds: number;
+  label: string;
+  focusPoint?: string;
+}
+
+export interface TechniqueVideo {
+  id: string;
+  title: string;
+  instructor: string;
+  academyOrChannel?: string;
+  youtubeId?: string; // YouTube video ID or full embed URL
+  videoUrl?: string; // Direct mp4 or video stream URL
+  duration?: string; // e.g. "04:30"
+  thumbnailUrl?: string;
+  description?: string;
+  beltTag?: BeltLevel;
+  difficulty?: Difficulty;
+  isPlaceholder?: boolean;
+  chapters?: TechniqueVideoChapter[];
+  sourceType?: 'youtube' | 'local' | 'custom';
+}
+
 export interface Technique {
   id: string;
   name: string;
@@ -130,6 +153,7 @@ export interface Technique {
   ibjjfLegalityNote?: string;
   tags: string[];
   visual3d?: Technique3DData;
+  videos?: TechniqueVideo[];
 }
 
 export interface School {

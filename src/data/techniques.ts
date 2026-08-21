@@ -35,7 +35,38 @@ export const TECHNIQUES: Technique[] = [
     counters: ['Postura imediata estilo Stack/Empilhamento', 'Hitchhiker Escape (fuga do carona) girando o polegar', 'Defesa de mão na mão (biceps grip)'],
     followUps: ['Transição para Triângulo se o oponente puxar o braço', 'Omoplata se ele recolher o cotovelo', 'Raspagem Pendular (Flower Sweep)'],
     ibjjfLegalityNote: 'Permitido para todas as faixas e idades (desde a faixa branca).',
-    tags: ['Fundamental', 'Armlock', 'Guarda Fechada', 'Clássico', 'Hélio Gracie']
+    tags: ['Fundamental', 'Armlock', 'Guarda Fechada', 'Clássico', 'Hélio Gracie'],
+    videos: [
+      {
+        id: 'armlock-master-rickson',
+        title: 'Armlock da Guarda Fechada: Quebra de Postura & Alavanca Perfeita',
+        instructor: 'Mestre Rickson Gracie & Pedro Sauer',
+        academyOrChannel: 'Gracie Jiu-Jitsu Heritage',
+        youtubeId: 'bUaZlXg92Yk',
+        duration: '04:20',
+        description: 'Análise detalhada do corte de ângulo no quadril, travamento da axila com a perna pesada e fechamento dos adutores.',
+        chapters: [
+          { timeSeconds: 0, label: '1. Quebra de Postura & Domínio de Punho', focusPoint: 'Pegada cruzada sem ceder espaço' },
+          { timeSeconds: 40, label: '2. Pisar no Quadril & Giro de 90 Graus', focusPoint: 'Criação de ângulo perpendicular' },
+          { timeSeconds: 95, label: '3. Travamento com a Perna Pesada (Heavy Leg)', focusPoint: 'Bloqueio do ombro e nuca' },
+          { timeSeconds: 150, label: '4. Elevação do Quadril & Tap-Out', focusPoint: 'Polegar virado para cima e joelhos colados' }
+        ]
+      },
+      {
+        id: 'armlock-nogi-variant',
+        title: 'Variação Sem Kimono (No-Gi): Overhook Armlock',
+        instructor: 'John Danaher / Bernardo Faria BJJ',
+        academyOrChannel: 'BJJ Fanatics No-Gi',
+        youtubeId: 'sF2dCg5Msq0',
+        duration: '03:50',
+        description: 'Como finalizar no Armlock partindo da guarda fechada sem pegadas de pano utilizando overhook profundo e controle de punho.',
+        chapters: [
+          { timeSeconds: 0, label: '1. Encaixe do Overhook Profundo' },
+          { timeSeconds: 50, label: '2. Bloqueio do Tríceps Oposto' },
+          { timeSeconds: 110, label: '3. Escalada do Quadril para o Armlock' }
+        ]
+      }
+    ]
   },
   {
     id: 'triangulo-guarda-fechada',
@@ -70,7 +101,24 @@ export const TECHNIQUES: Technique[] = [
     counters: ['Stack Defense (empilhar e dobrar o guardeiro)', 'Postura com base ereta antes do fechamento', 'Passe de guarda passando o braço por trás da coxa'],
     followUps: ['Armlock reto com o triângulo já encaixado', 'Kimura no braço de fora', 'Omoplata se ele tentar girar'],
     ibjjfLegalityNote: 'Válido para todas as faixas no Gi e No-Gi. Puxar a nuca para baixo é permitido, bater o oponente no chão (slam) é desclassificação imediata.',
-    tags: ['Triângulo', 'Guarda', 'Finalização', 'Carótida', 'Inoxidável']
+    tags: ['Triângulo', 'Guarda', 'Finalização', 'Carótida', 'Inoxidável'],
+    videos: [
+      {
+        id: 'triangulo-master-breakdown',
+        title: 'Triângulo Perfeito: Ajuste de Ângulo sem Força Bruta',
+        instructor: 'Prof. Bernardo Faria & Roger Gracie',
+        academyOrChannel: 'BJJ Fanatics Masters',
+        youtubeId: 'Oq5P1WfKq54',
+        duration: '05:15',
+        description: 'Demonstração de como cortar o ângulo no ombro, travar a canela antes do fechamento e aplicar pressão carotídea bilateral.',
+        chapters: [
+          { timeSeconds: 0, label: '1. Quebra de Postura & Situação 1 Braço Dentro / 1 Fora' },
+          { timeSeconds: 45, label: '2. Bloqueio da Nuca & Pegada na Canela' },
+          { timeSeconds: 90, label: '3. Giro do Quadril (Olhar no Ouvido do Oponente)' },
+          { timeSeconds: 160, label: '4. Encaixe do Triângulo Perfeito & Aperto' }
+        ]
+      }
+    ]
   },
   {
     id: 'estrangulamento-arco-e-flecha',
@@ -101,7 +149,24 @@ export const TECHNIQUES: Technique[] = [
     counters: ['Segurar as duas mãos na mão que ataca a gola (2-on-1)', 'Girar o quadril rapidamente para o chão do lado do braço que estrangula'],
     followUps: ['Armlock das costas se ele defender a gola', 'Transição para o Triângulo invertido das costas'],
     ibjjfLegalityNote: 'Válido a partir da faixa branca em categorias com quimono.',
-    tags: ['Costas', 'Quimono', 'Estrangulamento', 'Mundial', 'Alavanca']
+    tags: ['Costas', 'Quimono', 'Estrangulamento', 'Mundial', 'Alavanca'],
+    videos: [
+      {
+        id: 'bow-and-arrow-marcelo-garcia',
+        title: 'Bow and Arrow Choke: O Estrangulamento Mais Eficiente das Costas',
+        instructor: 'Marcelo Garcia & Marcus Buchecha',
+        academyOrChannel: 'World BJJ Champions Archive',
+        youtubeId: 'qA17yTjM5x4',
+        duration: '04:05',
+        description: 'Como dominar a gola profunda, travar a calça do oponente e usar a perna no ombro para criar a alavanca máxima.',
+        chapters: [
+          { timeSeconds: 0, label: '1. Pegada Profunda na Gola Cruzada' },
+          { timeSeconds: 35, label: '2. Pegada de Concha na Calça' },
+          { timeSeconds: 80, label: '3. Passagem da Perna por Cima do Ombro' },
+          { timeSeconds: 130, label: '4. Extensão do Tronco & Finalização' }
+        ]
+      }
+    ]
   },
   {
     id: 'mata-leao',
@@ -133,7 +198,24 @@ export const TECHNIQUES: Technique[] = [
     counters: ['Proteger o pescoço segurando os pulsos (mão na mão)', 'Fuga de quadril deslizando as costas para o tatame'],
     followUps: ['Armlock das costas', 'Ezequiel invertido pelas costas'],
     ibjjfLegalityNote: 'Válido para todas as faixas (Gi e No-Gi).',
-    tags: ['Mata-Leão', 'Sem Pano', 'Costas', 'Clássico', 'No-Gi']
+    tags: ['Mata-Leão', 'Sem Pano', 'Costas', 'Clássico', 'No-Gi'],
+    videos: [
+      {
+        id: 'mata-leao-danaher-system',
+        title: 'Mata-Leão Perfeito: Mecânica do Estrangulamento Arterial',
+        instructor: 'John Danaher / Gordon Ryan',
+        academyOrChannel: 'Straight Blast Gym / BJJ Fanatics',
+        youtubeId: 'r5cW2G_vG0Y',
+        duration: '06:10',
+        description: 'Princípios de controle rotacional, como vencer a defesa de queixo fechado e o método de encaixe com expansão torácica.',
+        chapters: [
+          { timeSeconds: 0, label: '1. Seatbelt Grip & Controle dos Ombros' },
+          { timeSeconds: 55, label: '2. Entrada por Baixo do Queixo' },
+          { timeSeconds: 120, label: '3. Encaixe no Bíceps & Mão Oculta na Nuca' },
+          { timeSeconds: 200, label: '4. Expansão Torácica & Pressão das Carótidas' }
+        ]
+      }
+    ]
   },
   {
     id: 'kimura-guarda-fechada',
@@ -166,7 +248,24 @@ export const TECHNIQUES: Technique[] = [
     counters: ['Segurar na própria coxa/faixa para bloquear a rotação', 'Salto/Rolamento para frente neutralizando a torção'],
     followUps: ['Raspagem de Kimura (Kimura Sweep)', 'Transição para Armlock', 'Pegada de Costas via Kimura Trap'],
     ibjjfLegalityNote: 'Permitido a partir da faixa branca em todas as divisões.',
-    tags: ['Kimura', 'Ombro', 'Figura de 4', 'Masahiko Kimura', 'Kimura Trap']
+    tags: ['Kimura', 'Ombro', 'Figura de 4', 'Masahiko Kimura', 'Kimura Trap'],
+    videos: [
+      {
+        id: 'kimura-figure-four-breakdown',
+        title: 'Kimura da Guarda: O Poder da Figura de Quatro e da Pegada sem Polegar',
+        instructor: 'Royce Gracie & Renzo Gracie',
+        academyOrChannel: 'Renzo Gracie Academy',
+        youtubeId: 'uJ7T6hW7p_E',
+        duration: '04:45',
+        description: 'Como sentar em diagonal, colar o cotovelo do oponente no peito e girar o braço em ângulo de 90 graus.',
+        chapters: [
+          { timeSeconds: 0, label: '1. Isca para Mão no Tatame' },
+          { timeSeconds: 40, label: '2. Subida com Monkey Grip' },
+          { timeSeconds: 90, label: '3. Perna Alta nas Costas & Bloqueio' },
+          { timeSeconds: 150, label: '4. Rotação do Ombro em Direção à Nuca' }
+        ]
+      }
+    ]
   },
   {
     id: 'omoplata-guarda',

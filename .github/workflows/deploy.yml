@@ -1,7 +1,7 @@
 # GitHub Actions workflow for deploying Vite React App to GitHub Pages
-# Runtime: Node 20.x
+# Runtime: Node 22 LTS (Eliminates Node 20 deprecation warning and lockfile errors)
 
-name: Deploy to GitHub Pages (Node 20)
+name: Deploy to GitHub Pages
 
 on:
   # Trigger the workflow on push to the main/master branch
@@ -34,14 +34,13 @@ jobs:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      - name: 🟢 Setup Node.js 20
+      - name: 🟢 Setup Node.js 22 (LTS)
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: 'npm'
+          node-version: 22
 
       - name: 📦 Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: 🔨 Build Vite Application (GitHub Pages relative base)
         run: npx vite build --base=./
@@ -57,3 +56,4 @@ jobs:
       - name: 🚀 Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+

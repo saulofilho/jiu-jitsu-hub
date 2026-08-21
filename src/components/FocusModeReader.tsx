@@ -18,10 +18,12 @@ import {
   ZoomOut,
   Layers,
   ArrowRight,
-  Box
+  Box,
+  Film
 } from 'lucide-react';
 import { Technique, BeltLevel } from '../types';
 import { Technique3DViewer } from './Technique3DViewer';
+import { TechniqueVideoPlayer } from './TechniqueVideoPlayer';
 
 interface FocusModeReaderProps {
   technique: Technique;
@@ -55,7 +57,7 @@ export function FocusModeReader({
   onToggleTrained,
 }: FocusModeReaderProps) {
   const [activeStepIndex, setActiveStepIndex] = useState<number>(0);
-  const [viewFormat, setViewFormat] = useState<'stepper' | 'full' | '3d'>('stepper');
+  const [viewFormat, setViewFormat] = useState<'stepper' | 'full' | '3d' | 'video'>('stepper');
   const [fontSizeLevel, setFontSizeLevel] = useState<'normal' | 'large' | 'xlarge'>('large');
 
   // Drill Timer (ex: 3 min rounds for repetitive drills)
@@ -208,7 +210,7 @@ export function FocusModeReader({
 
         {/* Right: Actions & Exit */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-          {/* Format Toggle: Passo a Passo, Lista Completa ou 3D */}
+          {/* Format Toggle: Passo a Passo, Lista Completa, Vídeo HD ou 3D */}
           <div className="hidden sm:flex items-center bg-zinc-900 border border-zinc-800 rounded-lg p-0.5 text-xs font-medium">
             <button
               onClick={() => setViewFormat('stepper')}
@@ -229,6 +231,17 @@ export function FocusModeReader({
               }`}
             >
               Visão Completa
+            </button>
+            <button
+              onClick={() => setViewFormat('video')}
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-md transition-all ${
+                viewFormat === 'video'
+                  ? 'bg-red-600 text-white font-bold shadow-sm'
+                  : 'text-red-400 hover:text-red-300'
+              }`}
+            >
+              <Film className="w-3.5 h-3.5" />
+              <span>Vídeo HD</span>
             </button>
             <button
               onClick={() => setViewFormat('3d')}
@@ -309,7 +322,15 @@ export function FocusModeReader({
 
       {/* MAIN READING CANVAS */}
       <main className="relative z-10 flex-1 overflow-y-auto px-4 sm:px-8 py-6 max-w-5xl w-full mx-auto flex flex-col justify-between">
-        {viewFormat === '3d' ? (
+        {viewFormat === 'video' ? (
+          /* VIDEO TUTORIAL PLAYER VIEW */
+          <div className="space-y-4 my-auto">
+            <TechniqueVideoPlayer 
+              technique={technique} 
+              onOpen3DView={() => setViewFormat('3d')}
+            />
+          </div>
+        ) : viewFormat === '3d' ? (
           /* 3D TATAMI SIMULATOR VIEW */
           <div className="space-y-4 my-auto">
             <div className="flex items-center justify-between border-b border-zinc-800 pb-3">

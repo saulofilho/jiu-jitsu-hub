@@ -37,7 +37,7 @@ export const GitHubPagesDeployGuideModal: React.FC<GitHubPagesDeployGuideModalPr
   };
 
   const workflowYaml = `# .github/workflows/deploy.yml
-name: Deploy to GitHub Pages (Node 20)
+name: Deploy to GitHub Pages
 
 on:
   push:
@@ -65,14 +65,13 @@ jobs:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      - name: 🟢 Setup Node.js 20
+      - name: 🟢 Setup Node.js 22 (LTS)
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: 'npm'
+          node-version: 22
 
       - name: 📦 Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: 🔨 Build Vite SPA (Relative Base)
         run: npx vite build --base=./
@@ -129,7 +128,7 @@ git push -u origin main
                   Publicar no GitHub Pages
                 </h3>
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-black border border-emerald-500/30">
-                  Node 20 LTS
+                  Node 22 LTS
                 </span>
               </div>
               <p className="text-xs text-zinc-400">
@@ -182,7 +181,7 @@ git push -u origin main
             }`}
           >
             <Server className="w-3.5 h-3.5" />
-            <span>Especificações Node 20 & Vite</span>
+            <span>Node 22 LTS & Vite</span>
           </button>
         </div>
 
@@ -203,7 +202,7 @@ git push -u origin main
                         Workflow do GitHub Actions já configurado!
                       </h4>
                       <p className="text-xs text-zinc-300 mt-1 leading-relaxed">
-                        O arquivo <code className="text-amber-400 bg-zinc-950 px-1.5 py-0.5 rounded border border-zinc-800">.github/workflows/deploy.yml</code> já foi criado no projeto com <strong>Node 20</strong> e compilação otimizada para o GitHub Pages.
+                        O arquivo <code className="text-amber-400 bg-zinc-950 px-1.5 py-0.5 rounded border border-zinc-800">.github/workflows/deploy.yml</code> já foi criado no projeto com <strong>Node 22 LTS</strong> e compilação otimizada para o GitHub Pages (sem dependência de lockfile rígido).
                       </p>
                     </div>
                   </div>

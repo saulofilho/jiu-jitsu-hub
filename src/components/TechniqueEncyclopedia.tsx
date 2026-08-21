@@ -20,13 +20,16 @@ import {
   Box,
   Activity,
   BookOpen,
-  GitFork
+  GitFork,
+  Film,
+  Play
 } from 'lucide-react';
 import { Technique, TechniqueCategory, Modality, BeltLevel } from '../types';
 import { TECHNIQUES } from '../data/techniques';
 import { FocusModeReader } from './FocusModeReader';
 import { TrainingStatsModal } from './TrainingStatsModal';
 import { Technique3DViewer } from './Technique3DViewer';
+import { TechniqueVideoPlayer } from './TechniqueVideoPlayer';
 import { calculateTechniqueXP, getUserXPProgress } from '../utils/xpSystem';
 import { PieChart as PieChartIcon } from 'lucide-react';
 
@@ -86,7 +89,7 @@ export const TechniqueEncyclopedia: React.FC<TechniqueEncyclopediaProps> = ({
   const [selectedModality, setSelectedModality] = useState<Modality | 'todas'>('todas');
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('todas');
   const [activeTechnique, setActiveTechnique] = useState<Technique | null>(null);
-  const [modalTab, setModalTab] = useState<'passos' | '3d' | 'invisivel' | 'erros'>('passos');
+  const [modalTab, setModalTab] = useState<'passos' | 'video' | '3d' | 'invisivel' | 'erros'>('passos');
   const [focusModeTechnique, setFocusModeTechnique] = useState<Technique | null>(null);
   const [filterFavoritesOnly, setFilterFavoritesOnly] = useState(false);
   const [isStatsModalOpen, setIsStatsModalOpen] = useState(false);
@@ -340,6 +343,12 @@ export const TechniqueEncyclopedia: React.FC<TechniqueEncyclopediaProps> = ({
                       <span className="text-[10px] px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-zinc-300 font-semibold">
                         {tech.modality === 'ambos' ? 'Gi & No-Gi' : tech.modality === 'gi' ? 'Gi (Kimono)' : 'No-Gi'}
                       </span>
+                      {tech.videos && tech.videos.length > 0 && (
+                        <span className="text-[10px] font-extrabold px-2 py-0.5 rounded bg-red-950/70 text-red-400 border border-red-800/60 flex items-center gap-1">
+                          <Film className="w-3 h-3 text-red-400" />
+                          <span>Vídeo HD</span>
+                        </span>
+                      )}
                     </div>
 
                     {/* Bookmark action */}
@@ -409,6 +418,20 @@ export const TechniqueEncyclopedia: React.FC<TechniqueEncyclopediaProps> = ({
                   </button>
 
                   <div className="flex items-center gap-1.5">
+                    <button
+                      id={`btn-video-${tech.id}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setActiveTechnique(tech);
+                        setModalTab('video');
+                      }}
+                      title="Assistir Vídeo-Aula / Demonstração HD"
+                      className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-red-600/10 hover:bg-red-600/20 text-red-400 border border-red-600/30 text-xs font-bold transition-all"
+                    >
+                      <Film className="w-3.5 h-3.5 text-red-400" />
+                      <span>Vídeo</span>
+                    </button>
+
                     <button
                       id={`btn-3d-${tech.id}`}
                       onClick={(e) => {
@@ -575,6 +598,22 @@ export const TechniqueEncyclopedia: React.FC<TechniqueEncyclopediaProps> = ({
               </button>
 
               <button
+                id="modal-tab-video"
+                onClick={() => setModalTab('video')}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all ${
+                  modalTab === 'video'
+                    ? 'bg-red-600 text-white shadow-md shadow-red-600/30 scale-[1.02]'
+                    : 'text-zinc-400 hover:text-white hover:bg-zinc-900 border border-red-500/30'
+                }`}
+              >
+                <Film className={`w-4 h-4 ${modalTab === 'video' ? 'text-white' : 'text-red-400'}`} />
+                <span>Vídeo-Aula</span>
+                <span className={`px-1.5 py-0.2 rounded text-[10px] font-black ${modalTab === 'video' ? 'bg-black/30 text-white' : 'bg-red-950 text-red-300 border border-red-800/60'}`}>
+                  HD
+                </span>
+              </button>
+
+              <button
                 id="modal-tab-3d"
                 onClick={() => setModalTab('3d')}
                 className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all ${
@@ -618,6 +657,19 @@ export const TechniqueEncyclopedia: React.FC<TechniqueEncyclopediaProps> = ({
             </div>
 
             {/* Modal Body Based on Active Tab */}
+            {modalTab === 'video' && (
+              <div className="space-y-4 animate-fade-in">
+                <TechniqueVideoPlayer
+                  technique={activeTechnique}
+                  onOpen3DView={() => setModalTab('3d')}
+                  onOpenFocusMode={() => {
+                    setFocusModeTechnique(activeTechnique);
+                    setActiveTechnique(null);
+                  }}
+                />
+              </div>
+            )}
+
             {modalTab === '3d' && (
               <div className="space-y-4 animate-fade-in">
                 <Technique3DViewer
@@ -664,26 +716,51 @@ export const TechniqueEncyclopedia: React.FC<TechniqueEncyclopediaProps> = ({
                   </div>
                 </div>
 
-                {/* Quick 3D Banner Callout */}
-                <div 
-                  onClick={() => setModalTab('3d')}
-                  className="cursor-pointer bg-gradient-to-r from-purple-950/40 via-zinc-900 to-amber-950/30 border border-purple-500/40 rounded-2xl p-4 flex items-center justify-between gap-4 hover:border-purple-400 transition-all"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center shrink-0 border border-purple-500/30">
-                      <Box className="w-5 h-5" />
+                {/* Interactive Action Banners: Video & 3D */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div 
+                    id="banner-callout-video"
+                    onClick={() => setModalTab('video')}
+                    className="cursor-pointer bg-gradient-to-r from-red-950/40 via-zinc-900 to-zinc-950 border border-red-500/40 rounded-2xl p-4 flex items-center justify-between gap-3 hover:border-red-400 transition-all group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-red-600/20 text-red-400 flex items-center justify-center shrink-0 border border-red-500/30 group-hover:scale-105 transition-transform">
+                        <Film className="w-5 h-5 text-red-400" />
+                      </div>
+                      <div>
+                        <h5 className="text-sm font-black text-white flex items-center gap-1.5">
+                          <span>Vídeo-Aula & Demonstração</span>
+                          <span className="px-1.5 py-0.2 rounded bg-red-600 text-white text-[9px] font-black uppercase">HD</span>
+                        </h5>
+                        <p className="text-xs text-zinc-400 mt-0.5 line-clamp-1">
+                          Capítulos e pontos de foco com mestres mundiais.
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h5 className="text-sm font-black text-white flex items-center gap-2">
-                        <span>Ver Mecânica e Alavanca em 3D</span>
-                        <span className="px-2 py-0.5 rounded-full bg-amber-500 text-zinc-950 text-[10px] font-black uppercase">Interativo</span>
-                      </h5>
-                      <p className="text-xs text-zinc-400 mt-0.5">
-                        Gire o tatame em 360°, alterne para visão em 1ª pessoa e inspecione os vetores de força.
-                      </p>
-                    </div>
+                    <ChevronRight className="w-5 h-5 text-red-400 shrink-0 group-hover:translate-x-1 transition-transform" />
                   </div>
-                  <ChevronRight className="w-5 h-5 text-purple-400 shrink-0" />
+
+                  <div 
+                    id="banner-callout-3d"
+                    onClick={() => setModalTab('3d')}
+                    className="cursor-pointer bg-gradient-to-r from-purple-950/40 via-zinc-900 to-zinc-950 border border-purple-500/40 rounded-2xl p-4 flex items-center justify-between gap-3 hover:border-purple-400 transition-all group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center shrink-0 border border-purple-500/30 group-hover:scale-105 transition-transform">
+                        <Box className="w-5 h-5 text-purple-400" />
+                      </div>
+                      <div>
+                        <h5 className="text-sm font-black text-white flex items-center gap-1.5">
+                          <span>Visualizador 3D / 360°</span>
+                          <span className="px-1.5 py-0.2 rounded bg-purple-500 text-white text-[9px] font-black uppercase">Interativo</span>
+                        </h5>
+                        <p className="text-xs text-zinc-400 mt-0.5 line-clamp-1">
+                          Alavancas, vetores e visão 1ª pessoa.
+                        </p>
+                      </div>
+                    </div>
+                    <ChevronRight className="w-5 h-5 text-purple-400 shrink-0 group-hover:translate-x-1 transition-transform" />
+                  </div>
                 </div>
               </div>
             )}
